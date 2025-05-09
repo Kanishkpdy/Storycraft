@@ -1,2 +1,7 @@
+<<<<<<< HEAD
 ﻿node_modules
+=======
+node_modules/
+dist/
+>>>>>>> 0366ca4 (Commit)
 .env
