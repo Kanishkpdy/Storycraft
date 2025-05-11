@@ -1,15 +1,24 @@
 const express = require('express');
 const cors = require('cors');
+const bodyParser = require('body-parser');
+const storyRoutes = require('./storyroutes');  // Import story routes
 
 const app = express();
-app.use(cors());
-app.use(express.json());
 
+// Middleware
+app.use(cors());
+app.use(bodyParser.json()); // Parse JSON requests
+
+// Root route (to test if the server is running)
 app.get('/', (req, res) => {
-  res.send('StoryCraft API is running!');
+  res.send('Server is running');
 });
 
-const PORT = 5000;
+// Use the routes for stories API
+app.use('/api', storyRoutes);
+
+// Start server
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
