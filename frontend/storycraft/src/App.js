@@ -1,22 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { getMessage } from './services/api';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import ReadStory from './ReadStory';
+import Home from './Home';
+import Upload from './Upload';
 
 function App() {
-  const [message, setMessage] = useState('');
-
-  useEffect(() => {
-    const fetchMessage = async () => {
-      const data = await getMessage();
-      if (data) setMessage(data);
-    };
-
-    fetchMessage();
-  }, []);
-
   return (
-    <div className="App">
-      <h1>{message ? message : 'Loading...'}</h1>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/story/:id" element={<ReadStory />} />
+        <Route path="/upload" element={<Upload />} />
+      </Routes>
+    </Router>
   );
 }
 

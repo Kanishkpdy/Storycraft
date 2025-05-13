@@ -1,13 +1,7 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/'; // Backend URL
+const API = axios.create({
+  baseURL: 'http://localhost:5000/api', // Base URL for all backend routes
+});
 
-export const getMessage = async () => {
-  try {
-    const response = await axios.get(API_URL);
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching data:', error);
-    return null;
-  }
-};
+export default API;

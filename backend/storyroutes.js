@@ -27,4 +27,22 @@ router.get('/stories', (req, res) => {
   });
 });
 
+router.get('/stories/:id', (req, res) => {
+  const storyId = req.params.id;
+
+  const query = `SELECT * FROM stories WHERE id = ?`;
+  db.get(query, [storyId], (err, row) => {
+    if (err) {
+      console.error('Error fetching story:', err);
+      return res.status(500).json({ message: 'Error fetching story' });
+    }
+    if (!row) {
+      return res.status(404).json({ message: 'Story not found' });
+    }
+    res.json(row); // Send the story as a response
+  });
+});
+
+
+
 module.exports = router;
