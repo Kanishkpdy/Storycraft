@@ -40,7 +40,7 @@ function Dashboard() {
         headers: { Authorization: `Bearer ${getToken()}` },
       });
       const updated = stories.map((s) =>
-        s.id === id ? { ...s, published: 1 } : s
+        s.id === id ? { ...s, status: 'published' } : s
       );
       setStories(updated);
     } catch (err) {
@@ -57,10 +57,10 @@ function Dashboard() {
         <div key={story.id} style={{ border: '1px solid #ddd', margin: '10px 0', padding: '10px' }}>
           <h3>{story.title}</h3>
           <p>{story.content.slice(0, 150)}...</p>
-          <p>Status: {story.published ? 'Published' : 'Draft'}</p>
+          <p>Status: {story.status === 'published' ? 'Published' : 'Draft'}</p>
           <button onClick={() => navigate(`/write/${story.id}`)}>✏️ Edit</button>
           <button onClick={() => handleDelete(story.id)}>🗑️ Delete</button>
-          {!story.published && <button onClick={() => handlePublish(story.id)}>🚀 Publish</button>}
+          {story.status !== 'published' && <button onClick={() => handlePublish(story.id)}>🚀 Publish</button>}
         </div>
       ))}
     </div>
