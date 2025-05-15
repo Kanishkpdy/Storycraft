@@ -22,7 +22,7 @@ function verifyToken(req, res, next) {
 //  Get all published stories
 router.get('/stories', (req, res) => {
   const query = `
-    SELECT stories.*, users.username 
+    SELECT stories.*, users.username
     FROM stories 
     LEFT JOIN users ON stories.user_id = users.id 
     WHERE status = "published" 
@@ -37,7 +37,7 @@ router.get('/stories', (req, res) => {
 //  Get a published story by ID
 router.get('/stories/:id', (req, res) => {
   const query = `
-    SELECT stories.*, users.username 
+    SELECT stories.*, users.username, users.usernickname  
     FROM stories 
     LEFT JOIN users ON stories.user_id = users.id 
     WHERE stories.id = ? AND status = "published"

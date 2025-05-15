@@ -6,12 +6,13 @@ db.serialize(() => {
   db.run(`
     CREATE TABLE IF NOT EXISTS users (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      username TEXT NOT NULL UNIQUE,
+      username TEXT NOT NULL UNIQUE, 
+      usernickname TEXT NOT NULL UNIQUE,
       password TEXT NOT NULL
     )
   `);
 
-  db.run(`
+  db.run(`  
     CREATE TABLE IF NOT EXISTS stories (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       title TEXT NOT NULL,
