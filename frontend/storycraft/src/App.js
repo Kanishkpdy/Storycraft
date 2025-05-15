@@ -9,7 +9,7 @@ import WriteStory from './pages/WriteStory';
 import ReadStory from './pages/ReadStory';
 import Header from './Header';
 import { getToken } from './auth';
-
+import './styles.css'
 function App() {
   return (
     <Router>

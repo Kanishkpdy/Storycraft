@@ -24,7 +24,11 @@ function ReadStory() {
   return (
     <div>
       <h1>{story.title}</h1>
-      <p>{story.content}</p>
+      <pre>{story.content}</pre>
+      <small>
+           ✍️ By <strong>{story.usernickname || 'Anonymous'}</strong> on{' '}
+          {new Date(story.created_at).toLocaleDateString()}
+      </small>
     </div>
   );
 }

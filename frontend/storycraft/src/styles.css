@@ -1,133 +1,172 @@
-/* Reset & Base */
-* {
-  box-sizing: border-box;
-}
-
+/* Global Styles */
 body {
-  margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f5f8fa;
-  color: #14171a;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f8fa;
+    color: #121212;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
 }
 
-/* Containers */
+h1, h2, h3 {
+    color: #222;
+    font-weight: 600;
+}
+
+a {
+    text-decoration: none;
+    color: #1DA1F2;
+    transition: color 0.2s ease-in-out;
+}
+
+a:hover {
+    color: #0d8ddb;
+    text-decoration: underline;
+}
+
+/* Container wrapper for pages (optional, if you add div wrapper with class "container") */
 .container {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-/* Header */
-.header {
-  font-size: 24px;
-  font-weight: bold;
-  padding: 20px;
-  background-color: #ffffff;
-  border-bottom: 1px solid #e1e8ed;
-  text-align: center;
-}
-
-/* Navbar */
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  padding: 12px 20px;
-  background-color: #ffffff;
-  border-bottom: 1px solid #e1e8ed;
-}
-
-.navbar a {
-  color: #1da1f2;
-  text-decoration: none;
-  font-weight: bold;
-  padding: 8px 12px;
-  border-radius: 999px;
-  transition: background-color 0.2s;
-}
-
-.navbar a:hover {
-  background-color: #e8f5fd;
-}
-
-/* Story Cards */
-.story-card {
-  background-color: #ffffff;
-  border: 1px solid #e1e8ed;
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 20px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-  transition: background-color 0.2s;
-}
-
-.story-card:hover {
-  background-color: #f0f8ff;
-}
-
-.story-card h3 {
-  margin-top: 0;
-  margin-bottom: 8px;
-}
-
-.story-card p {
-  margin: 0;
-  color: #333;
-}
-
-/* Form Styles */
-.form {
-  background-color: #ffffff;
-  border: 1px solid #e1e8ed;
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
-}
-
-input, textarea {
-  width: 100%;
-  padding: 12px;
-  margin-top: 10px;
-  margin-bottom: 20px;
-  border: 1px solid #ccd6dd;
-  border-radius: 8px;
-  font-size: 16px;
-}
-
-input:focus, textarea:focus {
-  outline: none;
-  border-color: #1da1f2;
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 0 15px;
 }
 
 /* Buttons */
 button {
-  background-color: #1da1f2;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 999px;
-  font-weight: bold;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.2s;
+    background-color: #1DA1F2;
+    border: none;
+    color: white;
+    padding: 10px 14px;
+    border-radius: 9999px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin: 5px 5px 5px 0;
+    font-size: 0.95rem;
+    box-shadow: 0 2px 4px rgba(29, 161, 242, 0.3);
 }
 
 button:hover {
-  background-color: #1991da;
+    background-color: #0d8ddb;
+    box-shadow: 0 4px 8px rgba(13, 141, 219, 0.4);
 }
 
-/* Centered login/register container */
-.auth-wrapper {
-  max-width: 400px;
-  margin: 50px auto;
-  padding: 24px;
-  background-color: #ffffff;
-  border: 1px solid #e1e8ed;
-  border-radius: 16px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(29, 161, 242, 0.5);
 }
 
-/* Auth headers */
-.auth-wrapper h2 {
-  text-align: center;
-  margin-bottom: 24px;
+/* Story cards */
+.story-card,
+div[style*="border: 1px solid"] {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    margin: 15px 0;
+    padding: 20px 25px;
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
 }
+
+.story-card:hover,
+div[style*="border: 1px solid"]:hover {
+    box-shadow: 0 8px 20px rgba(29, 161, 242, 0.2);
+    transform: translateY(-5px);
+}
+
+/* Story Title */
+h3 {
+    margin-top: 0;
+    font-size: 1.25rem;
+    color: #0f1419;
+}
+
+/* Story Preview text */
+.story-card p,pre,
+div[style*="border: 1px solid"] p {
+    color: #536471;
+    font-size: 0.95rem;
+    margin: 10px 0 15px 0;
+}
+
+/* Status text */
+.story-card p:nth-last-of-type(2),
+div[style*="border: 1px solid"] p:nth-last-of-type(2) {
+    font-weight: 600;
+    color: #555;
+}
+
+/* Inputs and Textareas */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea {
+    width: 100%;
+    border: 1.5px solid #ccd6dd;
+    border-radius: 12px;
+    padding: 12px 15px;
+    font-size: 1rem;
+    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    background-color: white;
+    color: #121212;
+    box-sizing: border-box;
+    font-family: inherit;
+    margin: 10px 0;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+textarea:focus {
+    outline: none;
+    border-color: #1DA1F2;
+    box-shadow: 0 0 5px rgba(29, 161, 242, 0.5);
+    background-color: #fff;
+}
+
+/* Form container */
+form {
+    background-color: white;
+    padding: 25px 30px;
+    border-radius: 12px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.1);
+    max-width: 600px;
+    margin: 30px auto;
+}
+
+/* Form title */
+form h2 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #0f1419;
+    font-weight: 700;
+}
+
+/* Link styling inside story previews */
+a {
+    font-weight: 600;
+}
+
+/* Loading text style */
+p.loading {
+    text-align: center;
+    color: #7a7a7a;
+    font-style: italic;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+    button {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    form {
+        margin: 20px 10px;
+        padding: 20px;
+    }
+    .story-card,
+    div[style*="border: 1px solid"] {
+        padding: 15px 20px;
+        margin: 10px 0;
+    }
+}
+

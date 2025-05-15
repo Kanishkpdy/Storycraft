@@ -19,7 +19,8 @@ function Login() {
       const user = {
         id: res.data.id,
         username: res.data.username,
-      };
+        usernickname: res.data.usernickname, // ✅ include nickname
+    };
 
       saveAuth(res.data.token, user);
       navigate('/dashboard');

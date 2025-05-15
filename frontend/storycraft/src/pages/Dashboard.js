@@ -1,7 +1,7 @@
 // pages/Dashboard.js
 import React, { useEffect, useState } from 'react';
 import API from '../services/api';
-import { getToken } from '../auth';
+import { getToken ,getUser} from '../auth';
 import { useNavigate } from 'react-router-dom';
 
 function Dashboard() {
@@ -47,10 +47,12 @@ function Dashboard() {
       alert('Failed to publish');
     }
   };
-
+  const user = getUser();
+  const usernickname = user?.usernickname;
+  console.log(user);
   return (
     <div>
-      <h2>📂 Your Stories</h2>
+      <h2>Hey {usernickname || 'there'} 👋, here are your stories!</h2>
       <button onClick={() => navigate('/write')}>➕ Write New Story</button>
       {stories.length === 0 && <p>No stories yet.</p>}
       {stories.map((story) => (
