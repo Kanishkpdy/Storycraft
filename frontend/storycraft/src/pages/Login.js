@@ -10,45 +10,43 @@ function Login() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
 
     try {
-      const res = await API.post('/login', { username, password });
+      const res = await API.post('/auth/login', { username, password });
       saveToken(res.data.token);
-      navigate('/dashboard');
+      navigate('/dashboard'); // Redirect immediately
     } catch (err) {
-      console.error('Login failed:', err);
-      setError('Invalid username or password.');
+      setError('Invalid username or password');
       setLoading(false);
     }
   };
 
   return (
     <div className="container">
-      <form onSubmit={handleLogin}>
-        <h2>🔐 Login</h2>
-        {loading && <p className="loading">Verifying credentials...</p>}
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+      <form onSubmit={handleSubmit}>
+        <h2>Login</h2>
         <input
           type="text"
           placeholder="Username"
           value={username}
-          required
           onChange={(e) => setUsername(e.target.value)}
+          required
         />
         <input
           type="password"
           placeholder="Password"
           value={password}
-          required
           onChange={(e) => setPassword(e.target.value)}
+          required
         />
         <button type="submit" disabled={loading}>
           {loading ? 'Logging in...' : 'Login'}
         </button>
+        {error && <p style={{ color: 'red' }}>{error}</p>}
       </form>
     </div>
   );
