@@ -1,3 +1,4 @@
+// pages/Login.js
 import React, { useState } from 'react';
 import API from '../services/api';
 import { saveAuth } from '../auth';
@@ -14,13 +15,12 @@ function Login() {
       // Send username instead of email to match backend expectations
       const res = await API.post('/login', { username: email, password });
 
-      // Backend returns: { token, id, username }
-      // We'll structure the user object before saving
+      // Expected backend response: { token, _id, username, usernickname }
       const user = {
-        id: res.data.id,
+        id: res.data._id, // 🛠 MongoDB uses _id
         username: res.data.username,
-        usernickname: res.data.usernickname, // ✅ include nickname
-    };
+        usernickname: res.data.usernickname,
+      };
 
       saveAuth(res.data.token, user);
       navigate('/dashboard');

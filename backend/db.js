@@ -1,28 +1,12 @@
-const sqlite3 = require('sqlite3').verbose();
-const db = new sqlite3.Database('./storycraft.db');
+const mongoose = require('mongoose');
 
-// Create users and stories table if they don't exist
-db.serialize(() => {
-  db.run(`
-    CREATE TABLE IF NOT EXISTS users (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      username TEXT NOT NULL UNIQUE, 
-      usernickname TEXT NOT NULL UNIQUE,
-      password TEXT NOT NULL
-    )
-  `);
+const MONGO_URI = 'mongodb+srv://KP:r757L4htbqGvStW6@storycraft.n2acyhr.mongodb.net/?retryWrites=true&w=majority&appName=Storycraft';
 
-  db.run(`  
-    CREATE TABLE IF NOT EXISTS stories (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      title TEXT NOT NULL,
-      content TEXT NOT NULL,
-      status TEXT CHECK(status IN ('draft', 'published')) NOT NULL DEFAULT 'draft',
-      user_id INTEGER,
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY(user_id) REFERENCES users(id)
-    )
-  `);
-});
+mongoose.connect(MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+.then(() => console.log('✅ MongoDB connected'))
+.catch((err) => console.error('❌ MongoDB connection error:', err));
 
-module.exports = db;
+module.exports = mongoose;

@@ -14,6 +14,7 @@ function ReadStory() {
         setStory(res.data);
       } catch (err) {
         console.error('Error loading story:', err);
+        alert('Failed to load the story');
       }
     };
     fetchStory();
@@ -24,10 +25,10 @@ function ReadStory() {
   return (
     <div>
       <h1>{story.title}</h1>
-      <pre>{story.content}</pre>
+      <pre style={{ whiteSpace: 'pre-wrap', fontFamily: 'inherit' }}>{story.content}</pre>
       <small>
-           ✍️ By <strong>{story.usernickname || 'Anonymous'}</strong> on{' '}
-          {new Date(story.created_at).toLocaleDateString()}
+        ✍️ By <strong>{story.user_id?.usernickname || 'Anonymous'}</strong> on{' '}
+        {new Date(story.created_at).toLocaleDateString()}
       </small>
     </div>
   );

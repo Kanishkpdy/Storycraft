@@ -1,11 +1,13 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const db = require('./db');
 const router = express.Router();
+
+const Story = require('./models/Story');
+const User = require('./models/User');
 
 const SECRET_KEY = 'supersecretkey';
 
-//  Middleware to protect routes
+// Middleware to verify token
 function verifyToken(req, res, next) {
   const token = req.headers.authorization?.split(' ')[1];
   if (!token) return res.status(401).json({ message: 'No token provided' });
@@ -19,88 +21,102 @@ function verifyToken(req, res, next) {
   }
 }
 
-//  Get all published stories
-router.get('/stories', (req, res) => {
-  const query = `
-    SELECT stories.*, users.username
-    FROM stories 
-    LEFT JOIN users ON stories.user_id = users.id 
-    WHERE status = "published" 
-    ORDER BY created_at DESC
-  `;
-  db.all(query, [], (err, rows) => {
-    if (err) return res.status(500).json({ message: 'Error fetching stories', error: err });
-    res.json(rows);
-  });
+// ✅ Get all published stories
+router.get('/stories', async (req, res) => {
+  try {
+    const stories = await Story.find({ status: 'published' })
+      .sort({ created_at: -1 })
+      .populate('user_id', 'username');
+    res.json(stories);
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching stories', error: err });
+  }
 });
 
-//  Get a published story by ID
-router.get('/stories/:id', (req, res) => {
-  const query = `
-    SELECT stories.*, users.username, users.usernickname  
-    FROM stories 
-    LEFT JOIN users ON stories.user_id = users.id 
-    WHERE stories.id = ? AND status = "published"
-  `;
-  db.get(query, [req.params.id], (err, row) => {
-    if (err) return res.status(500).json({ message: 'Error fetching story', error: err });
-    if (!row) return res.status(404).json({ message: 'Story not found' });
-    res.json(row);
-  });
+// ✅ Get single published story by ID
+router.get('/stories/:id', async (req, res) => {
+  try {
+    const story = await Story.findOne({ _id: req.params.id, status: 'published' })
+      .populate('user_id', 'username usernickname'); // <-- this is essential
+    if (!story) return res.status(404).json({ message: 'Story not found' });
+    res.json(story);
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching story', error: err });
+  }
 });
 
-// Create a story (draft by default)
-router.post('/stories', verifyToken, (req, res) => {
-  const { title, content } = req.body;
-  const status = 'draft';
 
-  const query = 'INSERT INTO stories (title, content, user_id, status) VALUES (?, ?, ?, ?)';
-  db.run(query, [title, content, req.user.id, status], function (err) {
-    if (err) return res.status(500).json({ message: 'Error saving story', error: err });
-    res.status(201).json({ id: this.lastID, message: 'Story saved as draft' });
-  });
+// ✅ Save a new story as draft (protected)
+router.post('/stories', verifyToken, async (req, res) => {
+  try {
+    const { title, content } = req.body;
+    const story = new Story({
+      title,
+      content,
+      status: 'draft',
+      user_id: req.user.id
+    });
+    await story.save();
+    res.status(201).json({ id: story._id, message: 'Story saved as draft' });
+  } catch (err) {
+    res.status(500).json({ message: 'Error saving story', error: err });
+  }
 });
 
-// Get current user's stories
-router.get('/mystories', verifyToken, (req, res) => {
-  const query = 'SELECT * FROM stories WHERE user_id = ? ORDER BY created_at DESC';
-  db.all(query, [req.user.id], (err, rows) => {
-    if (err) return res.status(500).json({ message: 'Error fetching your stories', error: err });
-    res.json(rows);
-  });
+// ✅ Get all stories of logged-in user (protected)
+router.get('/mystories', verifyToken, async (req, res) => {
+  try {
+    const stories = await Story.find({ user_id: req.user.id }).sort({ created_at: -1 });
+    res.json(stories);
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching your stories', error: err });
+  }
 });
 
-//  Edit a story (status defaults to draft if not passed)
-router.put('/stories/:id', verifyToken, (req, res) => {
-  const { title, content } = req.body;
-  const status = req.body.status || 'draft';
-
-  const query = 'UPDATE stories SET title = ?, content = ?, status = ? WHERE id = ? AND user_id = ?';
-  db.run(query, [title, content, status, req.params.id, req.user.id], function (err) {
-    if (err) return res.status(500).json({ message: 'Error updating story', error: err });
-    if (this.changes === 0) return res.status(403).json({ message: 'Not authorized or story not found' });
+// ✅ Update a story (protected)
+router.put('/stories/:id', verifyToken, async (req, res) => {
+  try {
+    const { title, content, status = 'draft' } = req.body;
+    const updated = await Story.updateOne(
+      { _id: req.params.id, user_id: req.user.id },
+      { title, content, status }
+    );
+    if (updated.modifiedCount === 0) {
+      return res.status(403).json({ message: 'Not authorized or story not found' });
+    }
     res.json({ message: 'Story updated' });
-  });
+  } catch (err) {
+    res.status(500).json({ message: 'Error updating story', error: err });
+  }
 });
 
-//  Publish a story
-router.put('/stories/:id/publish', verifyToken, (req, res) => {
-  const query = 'UPDATE stories SET status = "published" WHERE id = ? AND user_id = ?';
-  db.run(query, [req.params.id, req.user.id], function (err) {
-    if (err) return res.status(500).json({ message: 'Error publishing story', error: err });
-    if (this.changes === 0) return res.status(403).json({ message: 'Not authorized or story not found' });
+// ✅ Publish a story (protected)
+router.put('/stories/:id/publish', verifyToken, async (req, res) => {
+  try {
+    const result = await Story.updateOne(
+      { _id: req.params.id, user_id: req.user.id },
+      { status: 'published' }
+    );
+    if (result.modifiedCount === 0) {
+      return res.status(403).json({ message: 'Not authorized or story not found' });
+    }
     res.json({ message: 'Story published' });
-  });
+  } catch (err) {
+    res.status(500).json({ message: 'Error publishing story', error: err });
+  }
 });
 
-//  Delete a story
-router.delete('/stories/:id', verifyToken, (req, res) => {
-  const query = 'DELETE FROM stories WHERE id = ? AND user_id = ?';
-  db.run(query, [req.params.id, req.user.id], function (err) {
-    if (err) return res.status(500).json({ message: 'Error deleting story', error: err });
-    if (this.changes === 0) return res.status(403).json({ message: 'Not authorized or story not found' });
+// ✅ Delete a story (protected)
+router.delete('/stories/:id', verifyToken, async (req, res) => {
+  try {
+    const result = await Story.deleteOne({ _id: req.params.id, user_id: req.user.id });
+    if (result.deletedCount === 0) {
+      return res.status(403).json({ message: 'Not authorized or story not found' });
+    }
     res.json({ message: 'Story deleted' });
-  });
+  } catch (err) {
+    res.status(500).json({ message: 'Error deleting story', error: err });
+  }
 });
 
 module.exports = router;
