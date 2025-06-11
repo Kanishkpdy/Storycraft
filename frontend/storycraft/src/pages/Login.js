@@ -1,56 +1,54 @@
-// pages/Login.js
 import React, { useState } from 'react';
-import API from '../services/api';
-import { saveAuth } from '../auth';
 import { useNavigate } from 'react-router-dom';
+import API from '../services/api';
+import { saveToken } from '../auth';
 
 function Login() {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError('');
+
     try {
-      // Send username instead of email to match backend expectations
-      const res = await API.post('/login', { username: email, password });
-
-      // Expected backend response: { token, _id, username, usernickname }
-      const user = {
-        id: res.data._id, // 🛠 MongoDB uses _id
-        username: res.data.username,
-        usernickname: res.data.usernickname,
-      };
-
-      saveAuth(res.data.token, user);
+      const res = await API.post('/login', { username, password });
+      saveToken(res.data.token);
       navigate('/dashboard');
     } catch (err) {
-      console.error('Login error:', err.response?.data || err.message);
-      alert(err.response?.data?.message || 'Login failed');
+      console.error('Login failed:', err);
+      setError('Invalid username or password.');
+      setLoading(false);
     }
   };
 
   return (
-    <div>
-      <h2>🔐 Login</h2>
+    <div className="container">
       <form onSubmit={handleLogin}>
+        <h2>🔐 Login</h2>
+        {loading && <p className="loading">Verifying credentials...</p>}
+        {error && <p style={{ color: 'red' }}>{error}</p>}
         <input
-          type="email"
-          placeholder="Email"
-          value={email}
+          type="text"
+          placeholder="Username"
+          value={username}
           required
-          onChange={e => setEmail(e.target.value)}
+          onChange={(e) => setUsername(e.target.value)}
         />
-        <br />
         <input
           type="password"
           placeholder="Password"
           value={password}
           required
-          onChange={e => setPassword(e.target.value)}
+          onChange={(e) => setPassword(e.target.value)}
         />
-        <br />
-        <button type="submit">Login</button>
+        <button type="submit" disabled={loading}>
+          {loading ? 'Logging in...' : 'Login'}
+        </button>
       </form>
     </div>
   );
