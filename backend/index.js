@@ -11,7 +11,10 @@ require('./db'); // MongoDB connection
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: ['https://storycraft-psi.vercel.app', 'http://localhost:3000'],
+  credentials: true
+}));
 app.use(bodyParser.json());
 app.use(express.json());
 
