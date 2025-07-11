@@ -6,7 +6,7 @@ const isLocalhost = typeof window !== 'undefined' && window.location.hostname ==
 const API = axios.create({
   baseURL: isLocalhost 
     ? 'http://localhost:5000/api' 
-    : 'https://storycraft-production.up.railway.app/api',
+    : 'https://storycraft-backend-ulmh.onrender.com/api',
 });
 
 export default API;
