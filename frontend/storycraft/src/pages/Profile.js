@@ -19,27 +19,26 @@ function Profile() {
 
   const isOwner = loggedInUser?.id === id;
 
-    useEffect(() => {
-        const fetchProfile = async () => {
-        try {
-            const res = await API.get(`/users/${id}`);
-            const data = res.data;
-            setAuthor(data.author);
-            setStories(data.stories);
-            setFollowers(data.author.followers || []);
-            setFollowing(data.author.following || []);
-            if (getUser()) {
-            setFollowed(data.author.followers?.some(f => f._id === getUser().id));
-            }
-            setLoading(false);
-        } catch (err) {
-            console.error('Error loading profile:', err);
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const res = await API.get(`/users/${id}`);
+        const data = res.data;
+        setAuthor(data.author);
+        setStories(data.stories);
+        setFollowers(data.author.followers || []);
+        setFollowing(data.author.following || []);
+        if (getUser()) {
+          setFollowed(data.author.followers?.some(f => f._id === getUser().id));
         }
-        };
+        setLoading(false);
+      } catch (err) {
+        console.error('Error loading profile:', err);
+      }
+    };
 
-        fetchProfile();
-    }, [id]); 
-
+    fetchProfile();
+  }, [id]);
 
   const toggleFollow = async () => {
     try {
@@ -187,7 +186,13 @@ function Profile() {
                 border: '1px solid #ccc',
                 margin: '10px 0',
                 padding: '10px',
+                cursor: !isOwner ? 'pointer' : 'default',
               }}
+              onClick={
+                !isOwner
+                  ? () => navigate(`/story/${story._id}`)
+                  : undefined
+              }
             >
               <h4>{story.title}</h4>
               <p>{story.content.slice(0, 150)}...</p>
