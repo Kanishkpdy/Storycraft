@@ -19,24 +19,27 @@ function Profile() {
 
   const isOwner = loggedInUser?.id === id;
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const res = await API.get(`/users/${id}`); // ✅ fixed route
-        const data = res.data;
-        setAuthor(data.author);
-        setStories(data.stories);
-        setFollowers(data.author.followers || []);
-        setFollowing(data.author.following || []);
-        setFollowed(data.author.followers?.some(f => f._id === loggedInUser?.id));
-        setLoading(false);
-      } catch (err) {
-        console.error('Error loading profile:', err);
-      }
-    };
+    useEffect(() => {
+        const fetchProfile = async () => {
+        try {
+            const res = await API.get(`/users/${id}`);
+            const data = res.data;
+            setAuthor(data.author);
+            setStories(data.stories);
+            setFollowers(data.author.followers || []);
+            setFollowing(data.author.following || []);
+            if (getUser()) {
+            setFollowed(data.author.followers?.some(f => f._id === getUser().id));
+            }
+            setLoading(false);
+        } catch (err) {
+            console.error('Error loading profile:', err);
+        }
+        };
 
-    fetchProfile();
-  }, [id, loggedInUser?.id]);
+        fetchProfile();
+    }, [id]); 
+
 
   const toggleFollow = async () => {
     try {
@@ -44,8 +47,6 @@ function Profile() {
         headers: { Authorization: `Bearer ${getToken()}` },
       });
       setFollowed(!followed);
-
-      // Refresh followers list
       const res = await API.get(`/users/${id}`);
       setFollowers(res.data.author.followers || []);
     } catch (err) {
@@ -112,28 +113,27 @@ function Profile() {
             )}
           </p>
 
-         {showFollowers && (
+          {showFollowers && (
             <div style={{ marginBottom: '10px' }}>
-                {followers.length === 0 ? (
+              {followers.length === 0 ? (
                 <p>No followers yet.</p>
-                ) : isOwner ? (
+              ) : isOwner ? (
                 <ul style={{ paddingLeft: '20px' }}>
-                    {followers.map((user) => (
+                  {followers.map((user) => (
                     <li
-                        key={user._id}
-                        onClick={() => navigate(`/profile/${user._id}`)}
-                        style={{ cursor: 'pointer', color: 'blue' }}
+                      key={user._id}
+                      onClick={() => navigate(`/profile/${user._id}`)}
+                      style={{ cursor: 'pointer', color: 'blue' }}
                     >
-                        {user.usernickname}
+                      {user.usernickname}
                     </li>
-                    ))}
+                  ))}
                 </ul>
-                ) : (
+              ) : (
                 <p>You can only view follower names on your own profile.</p>
-                )}
+              )}
             </div>
-            )}
-
+          )}
 
           {isOwner && showFollowing && (
             <div style={{ marginBottom: '10px' }}>
@@ -155,10 +155,16 @@ function Profile() {
             </div>
           )}
 
-          {!isOwner && getToken() && (
-            <button onClick={toggleFollow}>
-              {followed ? 'Unfollow' : 'Follow'}
-            </button>
+          {!isOwner && (
+            getToken() ? (
+              <button onClick={toggleFollow}>
+                {followed ? 'Unfollow' : 'Follow'}
+              </button>
+            ) : (
+              <p style={{ color: 'gray', fontStyle: 'italic' }}>
+                🔒 Login to follow this user
+              </p>
+            )
           )}
         </div>
 

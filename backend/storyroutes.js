@@ -63,20 +63,6 @@ router.get('/stories/:id', async (req, res) => {
   }
 });
 
-// 👤 Get profile info and all their public stories
-router.get('/profile/:id', async (req, res) => {
-  try {
-    const author = await User.findById(req.params.id).select('-password');
-    if (!author) return res.status(404).json({ message: 'Author not found' });
-
-    const stories = await Story.find({ user_id: req.params.id, status: 'published' })
-      .sort({ created_at: -1 });
-
-    res.json({ author, stories });
-  } catch (err) {
-    res.status(500).json({ message: 'Error fetching profile', error: err });
-  }
-});
 
 // ✍️ Save a new story as draft
 router.post('/stories', verifyToken, async (req, res) => {
@@ -175,28 +161,5 @@ router.post('/stories/:id/like', verifyToken, async (req, res) => {
   }
 });
 
-
-// ➕ Follow or unfollow a user
-router.post('/follow/:id', verifyToken, async (req, res) => {
-  try {
-    const targetUser = await User.findById(req.params.id);
-    const currentUser = await User.findById(req.user.id);
-    if (!targetUser || !currentUser) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
-    const index = targetUser.followers.indexOf(currentUser._id);
-    if (index === -1) {
-      targetUser.followers.push(currentUser._id);
-    } else {
-      targetUser.followers.splice(index, 1);
-    }
-
-    await targetUser.save();
-    res.json({ followersCount: targetUser.followers.length });
-  } catch (err) {
-    res.status(500).json({ message: 'Error following/unfollowing', error: err });
-  }
-});
 
 module.exports = router;

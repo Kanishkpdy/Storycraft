@@ -37,7 +37,7 @@ function Home() {
       />
       <button onClick={() => fetchStories(search)}>🔍 Search</button>
 
-      {stories.length === 0 && <p>No stories found.</p>}
+      {stories.length === 0 && <p>Loading stories....</p>}
 
       {stories.map((story) => (
         <div
