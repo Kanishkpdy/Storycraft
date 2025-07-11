@@ -1,4 +1,3 @@
-// Header.js
 import { Link, useNavigate } from 'react-router-dom';
 import { getUser, logout } from './auth';
 
@@ -11,21 +10,40 @@ function Header() {
     navigate('/');
   };
 
+  const goToProfile = () => {
+    navigate(`/profile/${user.id}`);
+  };
+
   return (
-    <div style={{ padding: '10px', borderBottom: '1px solid #ccc', marginBottom: '20px' }}>
-      <Link to="/" style={{ marginRight: '15px' }}>🏠 Home</Link>
-      {user ? (
-        <>
-          <Link to="/dashboard" style={{ marginRight: '15px' }}>📂 Dashboard</Link>
-          <button onClick={handleLogout}>🚪 Logout</button>
-        </>
-      ) : (
-        <>
-          <Link to="/login" style={{ marginRight: '15px' }}>🔐 Login</Link>
-          <Link to="/register">📝 Register</Link>
-        </>
-      )}
-    </div>
+    <header>
+      <div className="left-nav">
+        <Link to="/" style={{ textDecoration: 'none' }}>
+          <h1>Storycraft</h1>
+        </Link>
+      </div>
+
+      <div className="right-nav">
+        <nav>
+          {user ? (
+            <>
+              <button className="link-button" onClick={goToProfile}>
+                👤 {user.usernickname}
+              </button>
+              <button className="link-button" onClick={handleLogout}>
+                🚪 Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/login">🔐 Login</Link>
+              <Link to="/register" style={{ marginLeft: '20px' }}>
+                📝 Register
+              </Link>
+            </>
+          )}
+        </nav>
+      </div>
+    </header>
   );
 }
 

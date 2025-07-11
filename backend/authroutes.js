@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const User = require('./models/User');
 const router = express.Router();
 
-const SECRET_KEY = 'supersecretkey'; // Ideally use process.env in production
+const SECRET_KEY = 'supersecretkey'; 
 
 const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
 const isValidNickname = (nick) => /^[a-zA-Z0-9_]{3,20}$/.test(nick);
@@ -71,5 +71,6 @@ router.post('/login', async (req, res) => {
     res.status(500).json({ message: 'Login failed', error: err });
   }
 });
+
 
 module.exports = router;

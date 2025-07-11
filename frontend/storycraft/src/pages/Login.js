@@ -1,7 +1,8 @@
+// pages/Login.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import API from '../services/api';
-import { saveToken } from '../auth';
+import { saveAuth } from '../auth';
 
 function Login() {
   const [username, setUsername] = useState('');
@@ -16,9 +17,9 @@ function Login() {
     setError('');
 
     try {
-      const res = await API.post('/auth/login', { username, password });
-      saveToken(res.data.token);
-      navigate('/dashboard'); // Redirect immediately
+      const res = await API.post('/login', { username, password });
+      saveAuth(res.data.token, res.data);
+      navigate(`/profile/${res.data.id}`);
     } catch (err) {
       setError('Invalid username or password');
       setLoading(false);
@@ -31,7 +32,7 @@ function Login() {
         <h2>Login</h2>
         <input
           type="text"
-          placeholder="Username"
+          placeholder="Email"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           required

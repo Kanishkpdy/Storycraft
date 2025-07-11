@@ -20,10 +20,13 @@ const storySchema = new mongoose.Schema({
     enum: ['draft', 'published'],
     default: 'draft'
   },
+  tags: [String],
+  likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   created_at: {
     type: Date,
     default: Date.now
-  }
+  },
+  updated_at: Date
 });
 
 module.exports = mongoose.model('Story', storySchema);

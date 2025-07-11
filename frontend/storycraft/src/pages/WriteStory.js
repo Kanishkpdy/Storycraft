@@ -7,7 +7,8 @@ import { getToken } from '../auth';
 function WriteStory() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const { id } = useParams(); // optional story id
+  const [tags, setTags] = useState('');
+  const { id } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -18,6 +19,7 @@ function WriteStory() {
         .then((res) => {
           setTitle(res.data.title);
           setContent(res.data.content);
+          setTags(res.data.tags?.join(', ')); // prefill tags
         })
         .catch((err) => {
           console.error('Error loading story:', err);
@@ -28,16 +30,17 @@ function WriteStory() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const tagList = tags.split(',').map(t => t.trim()).filter(Boolean);
+
     try {
       const config = {
         headers: { Authorization: `Bearer ${getToken()}` },
       };
 
       if (id) {
-        // PUT needs status in your backend
-        await API.put(`/stories/${id}`, { title, content, status: 'draft' }, config);
+        await API.put(`/stories/${id}`, { title, content, tags: tagList, status: 'draft' }, config);
       } else {
-        await API.post('/stories', { title, content }, config);
+        await API.post('/stories', { title, content, tags: tagList }, config);
       }
 
       navigate('/dashboard');
@@ -66,6 +69,13 @@ function WriteStory() {
           onChange={(e) => setContent(e.target.value)}
           rows="10"
           cols="60"
+        />
+        <br />
+        <input
+          type="text"
+          placeholder="Comma-separated tags (e.g. fantasy, love, war)"
+          value={tags}
+          onChange={(e) => setTags(e.target.value)}
         />
         <br />
         <button type="submit">💾 Save</button>

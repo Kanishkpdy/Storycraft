@@ -1,3 +1,4 @@
+// pages/Register.js
 import React, { useState } from 'react';
 import API from '../services/api';
 import { saveAuth } from '../auth';
@@ -12,18 +13,19 @@ function Register() {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const res=await API.post('/register', {
+      const res = await API.post('/register', {
         username: email,
         usernickname,
-        password
+        password,
       });
-      const user = {
+
+      saveAuth(res.data.token, {
         id: res.data.id,
         username: res.data.username,
-        usernickname: res.data.usernickname
-      };
+        usernickname: res.data.usernickname,
+        isAdmin: res.data.isAdmin || false, // optional
+      });
 
-      saveAuth(res.data.token, user);
       navigate('/dashboard');
     } catch (err) {
       console.error('Registration error:', err.response?.data || err.message);

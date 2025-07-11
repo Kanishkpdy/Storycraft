@@ -4,13 +4,16 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import Dashboard from './pages/Dashboard';
 import WriteStory from './pages/WriteStory';
 import ReadStory from './pages/ReadStory';
+import Profile from './pages/Profile';
 import Header from './Header';
-import { getToken } from './auth';
-import './styles.css'
+import { getToken, getUser } from './auth';
+import './styles.css';
+
 function App() {
+  const user = getUser();
+
   return (
     <Router>
       <Header />
@@ -19,10 +22,10 @@ function App() {
         <Route path="/story/:id" element={<ReadStory />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route
-          path="/dashboard"
-          element={getToken() ? <Dashboard /> : <Navigate to="/login" />}
-        />
+        <Route path="/profile/:id" element={<Profile />} />
+
+        <Route path="/dashboard" element={<Navigate to={`/profile/${user?.id}`} />} />
+
         <Route
           path="/write/:id?"
           element={getToken() ? <WriteStory /> : <Navigate to="/login" />}
