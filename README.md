@@ -8,7 +8,7 @@ StoryCraft is a complete storytelling platform where users can create, share, an
 
 - 🎨 **Frontend** built with React  
 - 🔗 **Backend API** using Node.js and Express  
-- 💾 **SQLite database** for reliable storage  
+- 💾 **MongoDB database** for scalable storage  
 - ✍️ **Create and manage stories** directly from the frontend  
 - 👤 **User profiles** with personalized dashboards  
 - ⭐ **Like system** to show appreciation for stories  
@@ -24,4 +24,5 @@ Users can write stories, and engage with a community through likes and follows.
 It’s a place to share adventures, explore different narratives, and connect with storytellers around the world.  
 
 ---
+
 
