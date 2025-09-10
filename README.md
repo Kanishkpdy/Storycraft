@@ -1,14 +1,27 @@
-## 🚧 Work in Progress
+# 📖 StoryCraft
 
-StoryCraft is currently under active development. The current features include:
+StoryCraft is a complete storytelling platform where users can create, share, and explore interactive stories with branching paths.  
 
-- 🎨 Frontend setup with React
-- 🔗 Backend API using Node.js and Express
-- 💾 Local SQLite database for storing stories
+---
 
-### Next Goals:
-- Add story creation and listing from the frontend
-- Enable branching paths in stories
-- Integrate AI features like auto-suggestion and summarization
+## 🚀 Features
 
-Stay tuned for more updates!
+- 🎨 **Frontend** built with React  
+- 🔗 **Backend API** using Node.js and Express  
+- 💾 **SQLite database** for reliable storage  
+- ✍️ **Create and manage stories** directly from the frontend  
+- 🌿 **Branching story paths** for interactive narratives  
+- 👤 **User profiles** with personalized dashboards  
+- ⭐ **Like system** to show appreciation for stories  
+- ➕ **Follow system** to keep up with favorite authors  
+- 📚 **Story listing and browsing** for discovery  
+
+---
+
+## 🌟 Overview
+
+StoryCraft brings storytelling to life by combining creativity with interactivity.  
+Users can write stories, design multiple paths, and engage with a community through likes and follows.  
+It’s a place to share adventures, explore different narratives, and connect with storytellers around the world.  
+
+---
